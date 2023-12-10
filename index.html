@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #ffb6c1; /* Pink background color */
+    }
+
+    #container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #balloons {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('path/to/balloons-image.jpg') no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    #buttons {
+      display: flex;
+      gap: 20px;
+      z-index: 1;
+      position: absolute;
+      bottom: 70px; /* Adjust the distance from the bottom */
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      background-color: transparent;
+      border: 1px solid red;
+      color: red;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 30px;
+      height: 60px; /* Adjusted height to look like cut-off heads */
+      background: url('images/ball1.png') no-repeat center center;
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 2; /* Higher z-index for the modal */
+    }
+
+    #modal img {
+      max-width: 80%;
+      max-height: 60%;
+      border: 2px solid #fff;
+      border-radius: 8px;
+    }
+
+    #modalText {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    #closeButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      background-color: transparent;
+      border: 1px solid red;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+    <div id="container">
+        <div id="balloons"></div>
+        <div class="mainimage">
+          <img src="images/mainimage.jpg"> 
+        </div>
+        <div id="buttons">
+          <button class="button" onclick="showSpecialPhoto()">მილოცვა</button>
+          <button class="button" onclick="playSoundAndShowPhoto('images/images.jpg')">დაიგნორება</button>
+        </div>
+      </div>
+      
+      <!-- Modal to display special photo -->
+      <div id="modal">
+        <p id="modalText">Special message goes here</p>
+        <img id="modalImage" alt="Modal Photo">
+        <button id="closeButton" onclick="closeModal()">Close</button>
+      </div>
+      
+      <audio id="sound"></audio>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          // Call function to create and animate balloons
+          createBalloons();
+        });
+      
+        function createBalloons() {
+          const balloonsContainer = document.getElementById('balloons');
+          
+          for (let i = 0; i < 10; i++) {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.style.left = `${Math.random() * 100}vw`;
+            balloon.style.top = `${Math.random() * 100}vh`;
+      
+            balloon.addEventListener('click', function() {
+              // You can add additional functionality when clicking on a balloon
+              console.log('Balloon clicked!');
+            });
+      
+            balloonsContainer.appendChild(balloon);
+      
+            // Animate the balloons using anime.js
+            anime({
+              targets: balloon,
+              translateY: -1000,
+              duration: 5000,
+              easing: 'easeInOutQuad',
+              loop: true,
+              delay: i * 500,
+            });
+          }
+        }
+      
+        function showSpecialPhoto() {
+          const modal = document.getElementById('modal');
+          const modalText = document.getElementById('modalText');
+          const modalImage = document.getElementById('modalImage');
+          const closeButton = document.getElementById('closeButton');
+          const sound = document.getElementById('sound');
+      
+          sound.src = 'hbdsound.mp3';
+          sound.play();
+          // Set the text and image source
+          modalText.innerText = 'Special message goes here';
+          modalImage.src = 'images/special.jpg';
+      
+          // Show the modal
+          modal.style.display = 'flex';
+      
+          // Remove auto close for this special photo
+          closeButton.onclick = function() {
+            closeModal();
+            sound.pause(); // Pause the sound when closing the modal
+          };
+        }
+      
+        function playSoundAndShowPhoto(photoUrl) {
+          const modal = document.getElementById('modal');
+          const modalText = document.getElementById('modalText');
+          const modalImage = document.getElementById('modalImage');
+          const sound = document.getElementById('sound');
+      
+          // Set the text and image source
+          modalText.innerText = '';
+          modalImage.src = photoUrl;
+      
+          // Play the sound
+          sound.src = 'sound.mp3';
+          sound.play();
+      
+          // Show the modal
+          modal.style.display = 'flex';
+        }
+      
+        function closeModal() {
+          const modal = document.getElementById('modal');
+          modal.style.display = 'none';
+          sound.pause();
+        }
+      </script>
+      
+      </body>
+      </html>
+</body>
+</html>
